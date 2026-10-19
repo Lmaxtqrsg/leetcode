@@ -4,14 +4,22 @@
 
 ## 目录
 
-| 文件 | 题目 | 对应章节 |
+### 第 2 章 线性表
+
+| 文件 | 题目 | 要点 |
 |---|---|---|
-| [`list_split.cpp`](list_split.cpp) | 单链表分解为 B(<0) 和 C(>0)，复用 A 的结点 | 第 2 章 线性表 |
-| [`list_max.cpp`](list_max.cpp) | 一趟遍历找值最大的结点 | 第 2 章 线性表 |
-| [`list_reverse.cpp`](list_reverse.cpp) | 原地逆置单链表（三指针，O(1) 空间） | 第 2 章 线性表 |
-| [`list_delete_range.cpp`](list_delete_range.cpp) | 删除递增有序表中 mink < data < maxk 的结点 | 第 2 章 线性表 |
-| [`stack_io_sim.cpp`](stack_io_sim.cpp) | 顺序栈：按 I/O 动作序列模拟入栈出栈 | 第 3 章 栈和队列 |
-| [`queue_io_sim.cpp`](queue_io_sim.cpp) | 循环队列：按 I/O 动作序列模拟入队出队 | 第 3 章 栈和队列 |
+| [`list_split.cpp`](list_split.cpp) | 单链表分解为 B(<0) 和 C(>0) | 复用 A 的结点，尾指针放循环外 |
+| [`list_max.cpp`](list_max.cpp) | 一趟遍历找值最大的结点 | 先判空，p = p->next 放 if 外 |
+| [`list_reverse.cpp`](list_reverse.cpp) | 单链表原地逆置（O(1) 空间） | 三指针，先备份后继再改指针 |
+| [`list_delete_range.cpp`](list_delete_range.cpp) | 删除递增有序表中 (mink, maxk) 的元素 | 利用有序性，定位后整段摘除 |
+
+### 第 3 章 栈和队列
+
+| 文件 | 题目 | 要点 |
+|---|---|---|
+| [`stack_io_sim.cpp`](stack_io_sim.cpp) | 顺序栈：按 I/O 序列模拟 | top 指向下一个空位 |
+| [`queue_io_sim.cpp`](queue_io_sim.cpp) | 循环队列：按 I/O 序列模拟 | 个数 = (rear-front+MAXSIZE)%MAXSIZE |
+| [`palindrome_stack.cpp`](palindrome_stack.cpp) | 用栈判断回文串 | 前半入栈，后半出栈对比 |
 
 ## 编译运行
 
@@ -24,7 +32,7 @@ cl /nologo /EHsc /utf-8 文件名.cpp /Fe:文件名.exe
 文件名.exe
 ```
 
-## 这几道题踩过的坑
+## 踩过的坑
 
 | 坑 | 说明 |
 |---|---|
@@ -35,11 +43,8 @@ cl /nologo /EHsc /utf-8 文件名.cpp /Fe:文件名.exe
 | 循环里忘了 `p = p->next` | 死循环 |
 | 没有头结点 | 野指针，程序崩溃 |
 | `cout << p` | 输出的是地址，不是值 |
-| 逆置时先改 `p->next` 再取后继 | 备份必须在前，否则 `p = p->next` 会往回走成死循环 |
-| 边界少写一个等号 | `data < mink` 应为 `data <= mink`，否则等于 mink 的结点被误删；端点要用表中真实存在的值来测 |
-| `p == p->next` | 这是比较不是赋值，指针原地不动 |
 
-## 三个通用模板
+## 四个通用模板
 
 ### 链表遍历
 
@@ -50,6 +55,20 @@ while (p != NULL) {
     // ... 处理 p ...
     p = p->next;                 // ★ 末尾一定推进
 }
+```
+
+### 链表逆置（原地，O(1) 空间）
+
+```cpp
+LNode *q = NULL;                 // 反转后的前驱
+LNode *p = L->next;
+while (p) {
+    LNode *r = p->next;          // ★ 先备份后继
+    p->next = q;                 // 掉转方向
+    q = p;                       // 前驱前移
+    p = r;                       // 当前前移
+}
+L->next = q;                     // ★ 挂回头结点
 ```
 
 ### 循环队列
@@ -66,4 +85,4 @@ while (p != NULL) {
 > 问自己：「这个变量的值，下一轮还需要吗？」
 >
 > - **需要** → 定义在**循环外**（尾指针 `rb`、`rc`）
-> - **不需要** → 定义在**循环内**（备份指针 `q`）
+> - **不需要** → 定义在**循环内**（备份指针 `q`、`r`）
