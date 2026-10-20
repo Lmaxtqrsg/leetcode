@@ -12,6 +12,7 @@
 | [`list_max.cpp`](list_max.cpp) | 一趟遍历找值最大的结点 | 先判空，p = p->next 放 if 外 |
 | [`list_reverse.cpp`](list_reverse.cpp) | 单链表原地逆置（O(1) 空间） | 三指针，先备份后继再改指针 |
 | [`list_delete_range.cpp`](list_delete_range.cpp) | 删除递增有序表中 (mink, maxk) 的元素 | 利用有序性，定位后整段摘除 |
+| [`list_bigint_add.cpp`](list_bigint_add.cpp) | 顺序表实现大整数加法 | 头插使低位在前；`carry` 写进循环条件 |
 
 ### 第 3 章 栈和队列
 
